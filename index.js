@@ -1,6 +1,6 @@
-const needle = require('needle')
-const { JSDOM } = require('jsdom')
 const { Rcon } = require('rcon-ts')
+const { bashorg } = require('./anek_sources/bashorg')
+const { stalker } = require('./anek_sources/stalker')
 require('dotenv').config()
 
 const rcon = new Rcon({
@@ -10,18 +10,14 @@ const rcon = new Rcon({
   timeout: 5000,
 })
 
-;(async () => {
-  const anekSource = 'http://bashorg.org/casual'
+const sleep = (t) => new Promise((r) => setTimeout(r, t))
 
-  setInterval(() => {
-    needle.get(anekSource, function (err, res) {
-      if (err) throw err
-      const anek = new JSDOM(res.body).window.document
-        .querySelector('.q')
-        .children[1].innerHTML.replaceAll('<br>', '\n')
-      rcon
-        .session((c) => c.send(anek))
-        .then(() => console.log('Anek succesfully otpravlen'), console.error)
-    })
-  }, process.env.ANEK_TIMEOUT_MINS * 1000 * 60)
+;(async () => {
+  while (true) {
+    const anek = await stalker()
+
+    rcon.session((c) => c.send(anek)).then(() => {}, console.error)
+
+    await sleep(process.env.ANEK_TIMEOUT_MINS * 1000 * 60)
+  }
 })()
