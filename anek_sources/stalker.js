@@ -14,6 +14,7 @@ const stalker = async () => {
           el.children[0].innerHTML
             .replaceAll('<br>', '\n')
             .replaceAll(/(<([^>]+)>)/gi, '')
+            .replaceAll('\n\n', '\n')
         )
 
         res(naborAnekov)
