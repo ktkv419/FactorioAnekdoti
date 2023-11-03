@@ -22,7 +22,10 @@ const stalker = async () => {
     )
   })
 
-  return naborAnekov[Math.floor(Math.random() * (naborAnekov.length + 1))]
+  return (
+    'Внимание, анекдот!\n' +
+    naborAnekov[Math.floor(Math.random() * (naborAnekov.length + 1))]
+  )
 }
 
 module.exports = { stalker }
